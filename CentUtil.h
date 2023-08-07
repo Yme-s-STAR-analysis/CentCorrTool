@@ -170,7 +170,7 @@ class CentUtil {
 
         // -------------------------------------------------------------------
         // - centrality split functions
-        void SetCentEdge(int e0, int e1, int e3, int e3, int e4, int e5, int e6, int e7, int e8) {
+        void SetCentEdge(int e0, int e1, int e2, int e3, int e4, int e5, int e6, int e7, int e8) {
             centSplitEdge[0] = e0;
             centSplitEdge[1] = e1;
             centSplitEdge[2] = e2;
