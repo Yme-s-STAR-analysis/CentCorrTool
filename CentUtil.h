@@ -44,9 +44,31 @@ class CentUtil {
         // -------------------------------------------------------------------
         int ConvertTrg(int trg);
         void ReadParams();
-        void SetDoPileUp(bool do_);
-        void SetDoLumi(bool do_);
-        void SetDoVz(bool do_);
+        void SetDoPileUp(bool do_) {
+            doPileUp = do_;
+            if (do_) {
+                std::cout << "[LOG] - SetDoPileUp: " << "ON." <<std::endl;
+            } else {
+                std::cout << "[LOG] - SetDoPileUp: " << "OFF." <<std::endl;
+            }
+        }
+        void SetDoLumi(bool do_) {
+            doLumi = do_;
+            if (do_) {
+                std::cout << "[LOG] - SetDoLumi: " << "ON." <<std::endl;
+            } else {
+                std::cout << "[LOG] - SetDoLumi: " << "OFF." <<std::endl;
+            }
+        }
+        void SetDoVz(bool do_) {
+            doVz = do_;
+            if (do_) {
+                std::cout << "[LOG] - SetDoVz: " << "ON." <<std::endl;
+            } else {
+                std::cout << "[LOG] - SetDoVz: " << "OFF." <<std::endl;
+            }
+
+        }
         
         // -------------------------------------------------------------------
         // - pile up settings
@@ -96,7 +118,7 @@ class CentUtil {
         void SetPileUpParam(
             double k11, double b11, double k12, double b12,
             double k21, double b21, double k22, double b22,
-            double k31, double b31, double k32, double b32,
+            double k31, double b31, double k32, double b32
         ) {
             SetPileUpBetaEta1LowerPar(k11, b11);
             SetPileUpBetaEta1UpperPar(k12, b12);

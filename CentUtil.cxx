@@ -35,7 +35,7 @@ void CentUtil::ReadParams() {
     }
 
     for (int i=0; i<nTrg; i++) {
-        SetLumiParam(cent_conf::trgList[i], cent_conf::vz_par[i]);
+        SetVzParam(cent_conf::trgList[i], &cent_conf::vz_par[i][0]);
     }
 }
 
@@ -88,7 +88,7 @@ int CentUtil::GetCentrality9(int ref3) {
         return -1;
     }
     for (int i=0; i<9; i++) {
-        if (ref3 > edge[i]) {
+        if (ref3 > centSplitEdge[i]) {
             return i;
         }
     }
