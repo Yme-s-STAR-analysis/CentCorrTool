@@ -37,6 +37,9 @@ void CentUtil::ReadParams() {
     for (int i=0; i<nTrg; i++) {
         SetVzParam(cent_conf::trgList[i], &cent_conf::vz_par[i][0]);
     }
+
+    SetCentEdge(cent_conf::cent_edge);
+    
 }
 
 int CentUtil::ConvertTrg(int trg) {
