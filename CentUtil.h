@@ -2,9 +2,9 @@
 #define __CENT_UTIL_HEADER__
 
 /*
-    Version: 2.0
+    Version: 3.0
     Author: yghuang
-    Date: 07.08.2023
+    Date: 06.10.2023
 */
 
 #include <iostream>
@@ -18,9 +18,20 @@ class CentUtil {
         int nTrg; // actual number of triggers, will be read from config file
         
         // pile up rejection parameters
-        double k11, k12, b11, b12;
-        double k21, k22, b21, b22;
-        double k31, k32, b31, b32;
+        // ---- old version : straight lines -----
+        // double k11, k12, b11, b12;
+        // double k21, k22, b21, b22;
+        // double k31, k32, b31, b32;
+
+        // ---- 3.0 new method parameters ------
+        double nTofMatchLowerPars[3];
+        double nTofMatchUpperPars[3];
+        double betaEta1LowerPars[3];
+        double betaEta1UpperPars[3];
+        TF1* nTofMatchUpperPoly3;
+        TF1* nTofMatchLowerPoly3;
+        TF1* betaEta1UpperPoly3;
+        TF1* betaEta1LowerPoly3;
         bool doPileUp;
 
         // luminosity correction parameters
@@ -73,78 +84,63 @@ class CentUtil {
         // -------------------------------------------------------------------
         // - pile up settings
         // helper functions
-        void SetPileUpBetaEta1LowerPar(double k11, double b11) {
-            this->k11 = k11;
-            this->b11 = b11;
-        }
-        void SetPileUpBetaEta1UpperPar(double k12, double b12) {
-            this->k12 = k12;
-            this->b12 = b12;
-        }
-        void SetPileUpBetaEta1(double* arr) {
-            k11 = arr[0];
-            b11 = arr[1];
-            k12 = arr[2];
-            b12 = arr[3];
-        }
-        void SetPileUpNTofMatch(double* arr) {
-            k21 = arr[0];
-            b21 = arr[1];
-            k22 = arr[2];
-            b22 = arr[3];
-        }
-        void SetPileUpTofMult(double* arr) {
-            k31 = arr[0];
-            b31 = arr[1];
-            k32 = arr[2];
-            b32 = arr[3];
-        }
-        void SetPileUpNTofMatchLowerPar(double k21, double b21) {
-            this->k21 = k21;
-            this->b21 = b21;
-        }
-        void SetPileUpNTofMatchUpperPar(double k22, double b22) {
-            this->k22 = k22;
-            this->b22 = b22;
-        }
-        void SetPileUpTofMultLowerPar(double k31, double b31) {
-            this->k31 = k31;
-            this->b31 = b31;
-        }
-        void SetPileUpTofMultUpperPar(double k32, double b32) {
-            this->k32 = k32;
-            this->b32 = b32;
-        }
-        void SetPileUpParam(
-            double k11, double b11, double k12, double b12,
-            double k21, double b21, double k22, double b22,
-            double k31, double b31, double k32, double b32
-        ) {
-            SetPileUpBetaEta1LowerPar(k11, b11);
-            SetPileUpBetaEta1UpperPar(k12, b12);
-            SetPileUpNTofMatchLowerPar(k21, b21);
-            SetPileUpNTofMatchUpperPar(k22, b22);
-            SetPileUpTofMultLowerPar(k31, b31);
-            SetPileUpTofMultUpperPar(k32, b32);
+        void SetPileUpNTofMatchLowerParam(double p0, double p1, double p2, double p3) {
+            nTofMatchLowerPars[0] = p0;
+            nTofMatchLowerPars[1] = p1;
+            nTofMatchLowerPars[2] = p2;
+            nTofMatchLowerPars[3] = p3;
+            nTofMatchLowerPoly3->SetParameters(nTofMatchLowerPars);
         }
 
-        // do pile up selection
-        // here x is always RefMult3 and y depends on the name of function
-        bool IsBetaEta1Bad(int x, int y) {
-            return (k11 != -999 && x * k11 + b11 > y) || (k12 != -999 && x * k12 + b12 < y);
+        void SetPileUpNTofMatchLowerParam(double *p) {
+            nTofMatchLowerPoly3->SetParameters(p);
         }
-        bool IsNTofMatchBad(int x, int y) {
-            return (k21 != -999 && x * k21 + b21 > y) || (k22 != -999 && x * k22 + b22 < y);
-        }
-        bool IsTofMultBad(int x, int y) {
-            return (k31 != -999 && x * k31 + b31 > y) || (k32 != -999 && x * k32 + b32 < y);
-        }
-        bool IsBetaEta1Good(int x, int y) { return !IsBetaEta1Bad(x, y); }
-        bool IsNTofMatchGood(int x, int y) { return !IsNTofMatchBad(x, y); }
-        bool IsTofMultGood(int x, int y) { return !IsTofMultBad(x, y); }
 
-        bool IsPileUp(int ref3, int beta_eta1, int nTofMatch, int TofMult) {
-            return IsBetaEta1Bad(ref3, beta_eta1) || IsNTofMatchBad(ref3, nTofMatch) || IsTofMultBad(ref3, TofMult);
+        void SetPileUpNTofMatchUpperParam(double p0, double p1, double p2, double p3) {
+            nTofMatchUpperPars[0] = p0;
+            nTofMatchUpperPars[1] = p1;
+            nTofMatchUpperPars[2] = p2;
+            nTofMatchUpperPars[3] = p3;
+            nTofMatchUpperPoly3->SetParameters(nTofMatchUpperPars);
+        }
+
+        void SetPileUpNTofMatchUpperParam(double *p) {
+            nTofMatchUpperPoly3->SetParameters(p);
+        }
+
+        void SetPileUpbetaEta1LowerParam(double p0, double p1, double p2, double p3) {
+            betaEta1LowerPars[0] = p0;
+            betaEta1LowerPars[1] = p1;
+            betaEta1LowerPars[2] = p2;
+            betaEta1LowerPars[3] = p3;
+            betaEta1LowerPoly3->SetParameters(betaEta1LowerPars);
+        }
+
+        void SetPileUpBetaEta1LowerParam(double *p) {
+            betaEta1LowerPoly3->SetParameters(p);
+        }
+
+        void SetPileUpbetaEta1UpperParam(double p0, double p1, double p2, double p3) {
+            betaEta1UpperPars[0] = p0;
+            betaEta1UpperPars[1] = p1;
+            betaEta1UpperPars[2] = p2;
+            betaEta1UpperPars[3] = p3;
+            betaEta1UpperPoly3->SetParameters(betaEta1UpperPars);
+        }
+
+        void SetPileUpBetaEta1UpperParam(double *p) {
+            betaEta1UpperPoly3->SetParameters(p);
+        }
+
+        bool IsBetaEta1PileUp(int ref3, int beta_eta1);
+        bool IsNTofMatchPileUp(int ref3, int nTofMatch);
+
+        bool IsPileUp(int ref3, int beta_eta1, int nTofMatch) {
+            return IsBetaEta1PileUp(ref3, beta_eta1) || IsNTofMatchPileUp(ref3, nTofMatch);
+        }
+
+        bool IsNotPileUp(int ref3, int beta_eta1, int nTofMatch) {
+            return !IsPileUp(ref3, beta_eta1, nTofMatch);
         }
 
         // -------------------------------------------------------------------

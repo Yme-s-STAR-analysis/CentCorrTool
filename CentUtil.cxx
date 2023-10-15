@@ -2,13 +2,26 @@
 #include "CentUtil.h"
 
 CentUtil::CentUtil() {
-    k11 = k12 = b11 = b12 = 0;
-    k21 = k22 = b21 = b22 = 0;
-    k31 = k32 = b31 = b32 = 0;
+    nTofMatchUpperPoly3 = new TF1("nTofMatchUpperPoly3", "pol3", 0, 850);
+    nTofMatchLowerPoly3 = new TF1("nTofMatchLowerPoly3", "pol3", 0, 850);
+    betaEta1UpperPoly3 = new TF1("betaEta1UpperPoly3", "pol3", 0, 850);
+    betaEta1LowerPoly3 = new TF1("betaEta1LowerPoly3", "pol3", 0, 850);
+    for (int i=0; i<3; i++) {
+        nTofMatchUpperPars[i] = 0;
+        nTofMatchLowerPars[i] = 0;
+        betaEta1UpperPars[i] = 0;
+        betaEta1LowerPars[i] = 0;
+    }
+    nTofMatchUpperPoly3->SetParameters(nTofMatchUpperPars);
+    nTofMatchLowerPoly3->SetParameters(nTofMatchLowerPars);
+    betaEta1UpperPoly3->SetParameters(betaEta1UpperPars);
+    betaEta1LowerPoly3->SetParameters(betaEta1LowerPars);
+
     for (int i=0; i<MAX_TRG; i++) {
         kLumi[i] = 0;
         bLumi[i] = 0;
     }
+    
     funcVz = new TF1("funcVz", "pol6", -70, 70);
     for (int i=0; i<9; i++) {
         centSplitEdge[i] = 0;
@@ -26,9 +39,10 @@ void CentUtil::ReadParams() {
     }
     std::cout << std::endl;
 
-    SetPileUpBetaEta1(cent_conf::beta_eta1_par);
-    SetPileUpNTofMatch(cent_conf::nTofMatch_par);
-    SetPileUpTofMult(cent_conf::TofMult_par);
+    SetPileUpNTofMatchUpperParam(cent_conf::nTofMatch_upper_pars);
+    SetPileUpNTofMatchLowerParam(cent_conf::nTofMatch_lower_pars);
+    SetPileUpBetaEta1UpperParam(cent_conf::beta_eta1_upper_pars);
+    SetPileUpBetaEta1LowerParam(cent_conf::beta_eta1_lower_pars);
 
     for (int i=0; i<nTrg; i++) {
         SetLumiParam(cent_conf::trgList[i], cent_conf::lumi_par[i][0], cent_conf::lumi_par[i][1]);
@@ -39,7 +53,6 @@ void CentUtil::ReadParams() {
     }
 
     SetCentEdge(cent_conf::cent_edge);
-    
 }
 
 int CentUtil::ConvertTrg(int trg) {
@@ -72,7 +85,7 @@ int CentUtil::GetRefMult3Corr(int ref3, int beta_eta1, int nTofMatch, int TofMul
     if (fabs(vz) > 70.0) {
         return -1;
     }
-    if (doPileUp && IsPileUp(ref3, beta_eta1, nTofMatch, TofMult)) {
+    if (doPileUp && IsPileUp(ref3, beta_eta1, nTofMatch)) {
         return -1;
     }
     if (doLumi) {
@@ -96,4 +109,12 @@ int CentUtil::GetCentrality9(int ref3) {
         }
     }
     return -1;
+}
+
+bool CentUtil::IsBetaEta1PileUp(int ref3, int beta_eta1) {
+    return betaEta1UpperPoly3->Eval(beta_eta1) < ref3 || betaEta1LowerPoly3->Eval(beta_eta1) > ref3 || beta_eta1 <= 1;
+}
+
+bool CentUtil::IsNTofMatchPileUp(int ref3, int nTofMatch) {
+    return nTofMatchUpperPoly3->Eval(nTofMatch) < ref3 || nTofMatchLowerPoly3->Eval(nTofMatch) > ref3 || nTofMatch <= 1;
 }
