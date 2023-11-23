@@ -2,11 +2,17 @@
 
 author: yghuang
 
-version: 3.1
+version: 4.0
 
 ## Change log
 
-09.10.2023 by yghuang(v3.1):
+22.11.2023 by yghuang (v4.0):
+
+> Do pile-up correction for separate pile-up quantities.
+>
+>> Now support vz-dependent pile-up (related to official cuts).
+
+09.10.2023 by yghuang (v3.1):
 
 > New pile-up method, see X2PileUp and X4Vz.
 >
