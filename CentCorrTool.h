@@ -213,7 +213,7 @@ class CentCorrTool {
             }
         }
 
-        int LumiCorrection(int trg, int ref3, int zdcx, bool withX=false);
+        int LumiCorrection(int trg, int ref3, int zdcx, bool withX);
 
         // -------------------------------------------------------------------
         // - vz settings
@@ -267,11 +267,11 @@ class CentCorrTool {
             funcVzX->SetParameters(&parVzX[trg][0]);
         }
 
-        int VzCorrection(int trg, int ref3, double vz, bool withX=false);
+        int VzCorrection(int trg, int ref3, double vz, bool withX);
 
         // -------------------------------------------------------------------
         // - do correction
-        int GetRefMult3Corr(int refmult, int ref3, int nTofMatch, int nTofBeta, double zdcx, double vz, int trgid, bool withX=false);
+        int GetRefMult3Corr(int refmult, int ref3, int nTofMatch, int nTofBeta, double zdcx, double vz, int trgid, bool withX);
 
         // -------------------------------------------------------------------
         // - centrality split functions
@@ -320,7 +320,7 @@ class CentCorrTool {
             std::cout << "[LOG] - Centrality bin edge (RefMult3X) specified.\n";
         }
 
-        int GetCentrality9(int ref3, bool withX=false);
+        int GetCentrality9(int ref3, bool withX);
 
 };
 
