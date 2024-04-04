@@ -2,9 +2,13 @@
 
 author: yghuang
 
-version: 5.0
+version: 6.0
 
 ## Change log
+
+04.04.2024 by yghuang (v6.0):
+
+> To use Ashish's parameters, `CentParams.h` is changed, and please call `EnableIndianMethod(true)` before `ReadParams()`, and interfaces are changed for Indian method
 
 23.01.2023 by yghuang (v5.0):
 
