@@ -6,6 +6,10 @@ version: 6.0
 
 ## Change log
 
+04.04.2024 by yghuang (v6.1):
+
+> Fix some bugs from unit test
+
 04.04.2024 by yghuang (v6.0):
 
 > To use Ashish's parameters, `CentParams.h` is changed, and please call `EnableIndianMethod(true)` before `ReadParams()`, and interfaces are changed for Indian method
