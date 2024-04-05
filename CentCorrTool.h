@@ -335,7 +335,7 @@ class CentCorrTool {
         // Indian method
         void EnableIndianMethod(bool enable=false) { IsIndian = enable; }
         bool IsIndianPileUp(int refMult, int tofMult, int tofMatch, int tofBeta);
-        double IndianVzCorrection(int ref3, double vz, bool withX=false);
+        int IndianVzCorrection(int ref3, double vz, bool withX=false);
         int GetIndianRefMult3Corr(int refMult, int ref3, int tofMult, int tofMatch, int tofBeta, double vz, bool withX=false);
 
 };

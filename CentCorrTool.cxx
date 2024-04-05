@@ -74,7 +74,7 @@ void CentCorrTool::ReadParams() {
             Indian_centSplitEdge[i] = cent_conf::Indian_cent_edge[i];
             Indian_centSplitEdgeX[i] = cent_conf::Indian_cent_edgeX[i];
         }
-        rd3 = new TRandom3();
+        rd = new TRandom3();
 
 
     } else {
@@ -217,19 +217,19 @@ bool CentCorrTool::IsIndianPileUp(int refMult, int tofMult, int tofMatch, int to
     Indian_PileUpCurve[2][1]->Eval(refMult) > tofBeta;
 }
 
-double CentCorrTool::IndianVzCorrection(int ref3, double vz, bool withX) {
+int CentCorrTool::IndianVzCorrection(int ref3, double vz, bool withX) {
     double factor = 1;
     int vzbin = (int)(vz + 50.0);
     if (vzbin < 0 || vzbin > 99) { return -1; }
     if (withX) {
-        factor = Indian_vz_parsX[vzbin];
+        factor = Indian_vzParsX[vzbin];
     } else {
-        factor = Indian_vz_pars[vzbin];
+        factor = Indian_vzPars[vzbin];
     }
-    return (int)((ref3 + rd3->Rndm()) * factor);
+    return (int)((ref3 + rd->Rndm()) * factor);
 }
 
-double CentCorrTool::GetIndianRefMult3Corr(int refMult, int ref3, int tofMult, int tofMatch, int tofBeta, double vz, bool withX) {
+int CentCorrTool::GetIndianRefMult3Corr(int refMult, int ref3, int tofMult, int tofMatch, int tofBeta, double vz, bool withX) {
     if (IsIndianPileUp(refMult, tofMult, tofMatch, tofBeta)) { return -1; }
     ref3 = IndianVzCorrection(ref3, vz, withX);
     return ref3;
