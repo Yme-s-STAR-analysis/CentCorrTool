@@ -55,6 +55,8 @@ void CentCorrTool::ReadParams() {
         std::cout << "[WARNING] - CentCorrTool: Patch number from configuation: " << cent_conf::CentCorrToolPatch << ", and from CentCorrTool: " << PatchNumber << std::endl;
         std::cout << "[WARNING] - CentCorrTool: This may lead to some fatal results, especially when you are using RefMult3X." << std::endl;
     }
+
+    rd = new TRandom3();
     if (IsIndian) { // apply Indian method
         std::cout << "[LOG] - CentCorrTool: [Indian Mode] ON" << std::endl;
         std::cout << "[LOG] - CentCorrTool: The parameter list is named as [" << cent_conf::Name << "] version [" << cent_conf::Mode << "]." << std::endl;
@@ -74,9 +76,6 @@ void CentCorrTool::ReadParams() {
             Indian_centSplitEdge[i] = cent_conf::Indian_cent_edge[i];
             Indian_centSplitEdgeX[i] = cent_conf::Indian_cent_edgeX[i];
         }
-        rd = new TRandom3();
-
-
     } else {
         std::cout << "[LOG] - CentCorrTool: [Indian Mode] OFF" << std::endl;
         nTrg = cent_conf::nTrg; 
@@ -140,7 +139,7 @@ int CentCorrTool::VzCorrection(int trg, int ref3, double vz, bool withX) {
     } else {
         factor = parVz[trg][0] / funcVz->Eval(vz);
     }
-    return (int)(factor * ref3);
+    return (int)((ref3 + rd->Rndm()) * factor);
 }
 
 int CentCorrTool::GetRefMult3Corr(int refmult, int ref3, int nTofMatch, int nTofBeta, double zdcx, double vz, int trgid, bool withX) {
@@ -163,13 +162,13 @@ int CentCorrTool::GetCentrality9(int ref3, bool withX) {
     if (IsIndian) {
         if (withX) {
             for (int i=0; i<9; i++) {
-                if (ref3 > Indian_centSplitEdgeX[i]) {
+                if (ref3 >= Indian_centSplitEdgeX[i]) {
                     return i;
                 }
             }
         } else {
             for (int i=0; i<9; i++) {
-                if (ref3 > Indian_centSplitEdge[i]) {
+                if (ref3 >= Indian_centSplitEdge[i]) {
                     return i;
                 }
             }
@@ -181,7 +180,7 @@ int CentCorrTool::GetCentrality9(int ref3, bool withX) {
                 return -1;
             }
             for (int i=0; i<9; i++) {
-                if (ref3 > centSplitEdgeX[i]) {
+                if (ref3 >= centSplitEdgeX[i]) {
                     return i;
                 }
             }
@@ -191,7 +190,7 @@ int CentCorrTool::GetCentrality9(int ref3, bool withX) {
                 return -1;
             }
             for (int i=0; i<9; i++) {
-                if (ref3 > centSplitEdge[i]) {
+                if (ref3 >= centSplitEdge[i]) {
                     return i;
                 }
             }

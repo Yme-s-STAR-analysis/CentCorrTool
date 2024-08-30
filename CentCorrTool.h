@@ -2,9 +2,9 @@
 #define __CENT_TOOL_HEADER__
 
 /*
-    Version: 6.0
+    Version: 7.0
     Author: yghuang
-    Date: 04.04.2024
+    Date: 30.08.2024
 */
 
 #include <iostream>
