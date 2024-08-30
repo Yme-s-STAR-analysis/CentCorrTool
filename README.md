@@ -2,9 +2,15 @@
 
 author: yghuang
 
-version: 6.0
+version: 7.0
 
 ## Change log
+
+30.08.2024 by yghuang (v7.0):
+
+> Important: centrality bin splitting should be `[low, high)` instead of previous `(low, high]`
+>
+> The vz correction for normal mode now also add a random float to form an integer, which might not be used but impleted
 
 04.04.2024 by yghuang (v6.1):
 
